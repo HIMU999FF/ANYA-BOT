@@ -1,93 +1,83 @@
-const si = require('systeminformation');
+const os = require('os');
+const { bold, thin } = require("fontstyles");
+
 module.exports = {
-	config: {
-		name: "system",
-		aliases: [],
-		version: "1.0",
-		author: "",
-		countDown: 5,
-		role: 0,
-		shortDescription: "System",
-		longDescription: "",
-		category: "",
-		guide: "{pn}"
-	},
+  config: {
+    name: 'stats',
+    aliases: ['status', 'system'],
+    version: '1.0',
+    author: 'softrilez',
+    countDown: 15,
+    role: 0,
+    shortDescription: 'Display bot system stats',
+    longDescription: {
+      id: 'Display bot system stats',
+      en: 'Display bot system stats'
+    },
+    category: 'system',
+    guide: {
+      id: '{pn}: Display bot system stats',
+      en: '{pn}: Display bot system stats'
+    }
+  },
+  onStart: async function ({ message, event, usersData, threadsData, api }) {
+    const startTime = Date.now();
+    const users = await usersData.getAll();
+    const groups = await threadsData.getAll();
+    const uptime = process.uptime();
+    const sentMessage = await message.reply(thin("🔄 loading…"));
+    
+    try {
+      const days = Math.floor(uptime / (3600 * 24));
+      const hours = Math.floor((uptime % (3600 * 24)) / 3600);
+      const minutes = Math.floor((uptime % 3600) / 60);
+      const seconds = Math.floor(uptime % 60);
 
-	onStart: function(bytes) {
-		const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-		let l = 0, n = parseInt(bytes, 10) || 0;
-		while (n >= 1024 && ++l) n = n / 1024;
-		return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)}${units[l]}`;
-	},
+      const memoryUsage = process.memoryUsage();
+      const totalMemory = os.totalmem();
+      const freeMemory = os.freemem();
+      const usedMemory = totalMemory - freeMemory;
+      const memoryUsagePercentage = (usedMemory / totalMemory * 100).toFixed(2);
 
-	onStart: async function ({ api, event }) {
-		const { cpu, cpuTemperature, currentLoad, memLayout, diskLayout, mem, osInfo } = si;
-		const timeStart = Date.now();
-		const axios = require ("axios");
-		const request = require ("request");
-		const fs = require ("fs-extra");
+      const cpuUsage = os.loadavg();
+      const cpuCores = os.cpus().length;
+      const cpuModel = os.cpus()[0].model;
+      const nodeVersion = process.version;
+      const platform = os.platform();
+      const networkInterfaces = os.networkInterfaces();
 
-		try {
-			var { manufacturer, brand, speed, physicalCores, cores } = await cpu();
-			var { main: mainTemp } = await cpuTemperature();
-			var { currentLoad: load } = await currentLoad();
-			var diskInfo = await diskLayout();
-			var memInfo = await memLayout();
-			var { total: totalMem, available: availableMem } = await mem();
-			var { platform: OSPlatform, build: OSBuild } = await osInfo();
+      const networkInfo = Object.keys(networkInterfaces).map(interface => {
+        return {
+          interface,
+          addresses: networkInterfaces[interface].map(info => `${info.family}: ${info.address}`)
+        };
+      });
 
-			var time = process.uptime();
-			var hours = Math.floor(time / (60 * 60));
-			var minutes = Math.floor((time % (60 * 60)) / 60);
-			var seconds = Math.floor(time % 60);
-			if (hours < 10) hours = "0" + hours;
-			if (minutes < 10) minutes = "0" + minutes;
-			if (seconds < 10) seconds = "0" + seconds;
+      const endTime = Date.now();
+      const botPing = endTime - startTime;
+      const apiPing = sentMessage.timestamp - startTime;
 
-			var ZiaRein = (
-				"𝗦𝘆𝘀𝘁𝗲𝗺 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻" +
-				"\𝗨 𝗜𝗻𝗳𝗼" +
-				"\𝗨 𝗠𝗼𝗱𝗲𝗹: " + manufacturer + brand +
-				"\?𝗲𝗱: " + speed + "GHz" +
-				"\?𝗲𝘀: " + physicalCores +
-				"\?𝗲𝗮𝗱𝘀: " + cores +
-				"\?𝗽𝗲𝗿𝗮𝘁𝘂𝗿𝗲: " + mainTemp + "°C" +
-				"\?𝗱: " + load.toFixed(1) + "%" +
-				"\𝗺𝗼𝗿𝘆 𝗜𝗻𝗳𝗼" +
-				"\?𝗲: " + this.byte2mb(memInfo[0].size) +
-				"\?𝗲: " + memInfo[0].type +
-				"\?𝗮𝗹: " + this.byte2mb(totalMem) +
-				"\?𝗶𝗹𝗮𝗯𝗹𝗲: " + this.byte2mb(availableMem) +
-				"\𝘀𝗸 𝗜𝗻𝗳𝗼" +
-				"\?𝗲: " + diskInfo[0].name +
-				"\?𝗲: " + this.byte2mb(diskInfo[0].size) +
-				"\?𝗽𝗲𝗿𝗮𝘁𝘂𝗿𝗲: " + diskInfo[0].type +
-				"\?𝘀𝗲: " + diskInfo[0].temperature + "°C" +
-				"\ 𝗜𝗻𝗳𝗼" +
-				"\?𝘁𝗳𝗼𝗿𝗺: " + OSPlatform +
-				"\?𝗹𝗱: " + OSBuild +
-				"\?𝗶𝗺𝗲: " + hours + ":" + minutes + ":" + seconds +
-				"\?𝗴: " + (Date.now() - timeStart) + "ms");
+      const messageContent = `🖥 ${bold("System Statistics")}:\n\n` +
+        `• 𝙐𝙋𝙏𝙄𝙈𝙀: ${days}d ${hours}h ${minutes}m ${seconds}s\n` +
+        `• 𝙈𝙀𝙈𝙊𝙍𝙔 𝙐𝙎𝘼𝙂𝙀: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} 𝙈𝘽\n` +
+        `• 𝙏𝙊𝙏𝘼𝙇 𝙈𝙀𝙈𝙊𝙍𝙔: ${(totalMemory / 1024 / 1024 / 1024).toFixed(2)} 𝙂𝘽\n` +
+        `• 𝙁𝙍𝙀𝙀 𝙈𝙀𝙈𝙊𝙍𝙔: ${(freeMemory / 1024 / 1024 / 1024).toFixed(2)} 𝙂𝘽\n` +
+        `• 𝙈𝙀𝙈𝙊𝙍𝙔 𝙐𝙎𝘼𝙂𝙀 𝙋𝙀𝙍𝘾𝙀𝙉𝙏𝘼𝙂𝙀: ${memoryUsagePercentage}%\n` +
+        `• 𝘾𝙋𝙐 𝙐𝙎𝘼𝙂𝙀 (1m): ${cpuUsage[0].toFixed(2)}%\n` +
+        `• 𝘾𝙋𝙐 𝙐𝙎𝘼𝙂𝙀 (5m): ${cpuUsage[1].toFixed(2)}%\n` +
+        `• 𝘾𝙋𝙐 𝙐𝙎𝘼𝙂𝙀 (15m): ${cpuUsage[2].toFixed(2)}%\n` +
+        `• 𝘾𝙋𝙐 𝘾𝙊𝙍𝙀𝙎: ${cpuCores}\n` +
+        `• 𝘾𝙋𝙐 𝙈𝙊𝘿𝙀𝙇: ${cpuModel}\n` +
+        `• 𝙉𝙊𝘿𝙀.𝙅𝙎 𝙑𝙀𝙍𝙎𝙄𝙊𝙉: ${nodeVersion}\n` +
+        `• 𝙋𝙇𝘼𝙏𝙁𝙍𝙊𝙈: ${platform}\n` +
+        `• 𝙋𝙄𝙉𝙂: ${botPing}ms\n• API: ${apiPing}ms\n• Total Users: ${users.length}\n• Total Groups: ${groups.length}\n\n` +
+        `🌐 ${bold("Network Interfaces")}:\n\n` +
+        `${networkInfo.map(info => `• ${info.interface}: ${info.addresses.join(', ')}`).join('\n')}`;
 
-			const link = [
-				"https://i.imgur.com/u1WkhXi.jpg",
-				"https://i.imgur.com/zuUMUDp.jpg",
-				"https://i.imgur.com/skHrcq9.jpg",
-				"https://i.imgur.com/TE9tH8w.jpg",
-				"https://i.imgur.com/on9p0FK.jpg",
-				"https://i.imgur.com/mriBW5m.jpg",
-				"https://i.imgur.com/ju7CyHo.jpg",
-				"https://i.imgur.com/KJunp2s.jpg",
-				"https://i.imgur.com/6knPOgd.jpg","https://i.imgur.com/Nxcbwxk.jpg",
-				"https://i.imgur.com/FgtghTN.jpg",
-			];
-
-			var callback = () => api.sendMessage({ body: ZiaRein, attachment: fs.createReadStream(__dirname + "/cache/5.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/5.jpg"), event.messageID);
-
-			request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname + "/cache/5.jpg")).on("close", () => callback());
-		}
-		catch (e) {
-			console.log(e);
-		}
-	}
+      return api.editMessage(thin(messageContent), sentMessage.messageID);
+    } catch (err) {
+      console.error(err);
+      return api.editMessage("❌ An error occurred while fetching system statistics.", sentMessage.messageID);
+    }
+  }
 };
