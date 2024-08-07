@@ -1,5 +1,4 @@
 const axios = require('axios');
-
 async function checkAuthor(authorName) {
   try {
     const response = await axios.get('https://author-check.vercel.app/name');
@@ -10,7 +9,6 @@ async function checkAuthor(authorName) {
     return false;
   }
 }
-
 async function a(api, event, args, message) {
   try {
     const isAuthorValid = await checkAuthor(module.exports.config.author);
