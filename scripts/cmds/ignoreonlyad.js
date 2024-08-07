@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 module.exports = {
 	config: {
 		name: "ignoreonlyad",
-		aliases: ["ignoreadonly", "ignoreonlyadmin", "ignoreadminonly"],
+		aliases: [""],
 		version: "1.0",
 		author: "NTKhang",
 		countDown: 5,
