@@ -3,17 +3,17 @@ const axios = require("axios");
 const path = require("path");
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
-const doNotDelete = "『[✰AYAN💌』"; // don't change neme
-
+const doNotDelete = "[𝐍𝐎 𝐁𝐀 𝐑𝐀 ❤️🪽]";
+ 
 module.exports = {
   config: {
     name: "help",
     version: "1.17",
-    author: " MR.AYAN", // original author AYAN
+    author: "NTKhang", // orginal author Kshitiz
     countDown: 0,
     role: 0,
     shortDescription: {
-      en: "View command usage and list all commands directly",
+      en: "View command usage",
     },
     longDescription: {
       en: "View command usage and list all commands directly",
@@ -24,78 +24,82 @@ module.exports = {
     },
     priority: 1,
   },
-
+ 
   onStart: async function ({ message, args, event, threadsData, role }) {
-    const { threadID } = event;
-    const threadData = await threadsData.get(threadID);
-    const prefix = getPrefix(threadID);
-
-    if (args.length === 0) {
+  const { threadID } = event;
+  const threadData = await threadsData.get(threadID);
+  const prefix = getPrefix(threadID);
+ 
+  if (args.length === 0) {
       const categories = {};
       let msg = "";
-
-      msg += `╔═════▓࿇࿇▓═════╗\n             𝐀𝐋𝐋 𝐂𝐌𝐃 𝐋𝐈𝐒𝐓 𝗜𝗡 𝗠𝗔𝗛𝗜'𝗦 𝔅𝔞𝔫𝔨𝔞𝔦 𝔟𝔬𝔱 𝗕𝗢𝗧\n╚═════▓࿇࿇▓═════╝\n\n`; // replace with your name 
-
+ 
+      msg += `╔══════════════╗\n✿︎ 𝐍𝐎 𝐁𝐀 𝐑𝐀 ❤️🪽✿︎\n╚══════════════╝`;
+ 
       for (const [name, value] of commands) {
-        if (value.config.role > 1 && role < value.config.role) continue;
-
-        const category = value.config.category || "Uncategorized";
-        categories[category] = categories[category] || { commands: [] };
-        categories[category].commands.push(name);
+          if (value.config.role > 1 && role < value.config.role) continue;
+ 
+          const category = value.config.category || "Uncategorized";
+          categories[category] = categories[category] || { commands: [] };
+          categories[category].commands.push(name);
       }
-
-      Object.keys(categories).forEach((category) => {
-        if (category !== "info") {
-          msg += `\n➪ ༆─☞︎︎︎ [${category.toUpperCase()}] 》👑`;
-
-
-          const names = categories[category].commands.sort();
-          for (let i = 0; i < names.length; i += 3) {
-            const cmds = names.slice(i, i + 3).map((item) => ` ✯${item}|\n`);
-            msg += `\n ${cmds.join(" ".repeat(Math.max(1, 10 - cmds.join("").length)))}`;
+8
+      Object.keys(categories).forEach(category => {
+          if (category !== "info") {
+              msg += `\n╭────────────⭓\n│『 ${category.toUpperCase()} 』`;
+ 
+              const names = categories[category].commands.sort();
+              for (let i = 0; i < names.length; i += 1) {
+                  const cmds = names.slice(i, i + 1).map(item => `│✧${item}`);
+                  msg += `\n${cmds.join(" ".repeat(Math.max(0, 5 - cmds.join("").length)))}`;
+              }
+ 
+              msg += `\n╰────────⭓`;
           }
-
-          msg += ``;
-        }
       });
-
+ 
       const totalCommands = commands.size;
-      msg += `\n𝗧𝗢𝗧𝗔𝗟 𝙲𝚖𝚍 ${totalCommands}\n𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚝𝚑𝚊t 𝚞 𝚌𝚊𝚗 𝚞𝚜𝚎 in lord aizens bankai bot -`;
-      msg += `𝚝𝚢𝚙𝚎: 「${prefix} 𝗵𝗲𝗹𝗽」+「 𝐇𝐄𝐋𝐏 𝐂𝐌𝐃」𝚝𝚘 𝚟𝚒𝚎𝚠 𝚍𝚎𝚝𝚊𝚒𝚕𝚜 𝚘𝚏 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜\n`;
-      msg += `👑 | 𝐓𝐇𝐀𝐍𝐊𝐒 𝐅𝐎𝐑 𝐔𝐒𝐈𝐍𝐆 𝐋𝐎𝐑𝐃 𝐀𝐈𝐙𝐄𝐍 𝐉𝐑'𝐒 𝐁𝐎𝐓 𝐖𝐄'𝐋𝐋 𝐂𝐎𝐌𝐄 𝐖𝐈𝐓𝐇 𝐍𝐄𝐖 𝐔𝐏𝐃𝐀𝐓𝐄 𝐄𝐕𝐄𝐑𝐘 𝐖𝐄𝐄𝐊`; // its not decoy so change it if you want 
-
+      msg += `\n𝘾𝙐𝙍𝙍𝙀𝙉𝙏𝙇𝙔, 𝙏𝙃𝙄𝙎 𝘽𝙊𝙏 𝙃𝘼𝙑𝙀 ${totalCommands} 𝘾𝙊𝙈𝙈𝘼𝙉𝘿𝙎 𝙏𝙃𝘼𝙏 𝘾𝘼𝙉 𝘽𝙀 𝙐𝙎𝙀𝘿. 𝙎𝙤𝙤𝙣 𝙢𝙤𝙧𝙚 𝙘𝙤𝙢𝙢𝙖𝙣𝙙𝙨 𝙬𝙞𝙡𝙡 𝙗𝙚 𝙖𝙙𝙙𝙚𝙙\n`;
+      msg += `\n𝙏𝙃𝘼𝙉𝙆'𝙎 𝙁𝙊𝙍 𝙐𝙎𝙀𝙄𝙉𝙂 𝙇𝙊𝙍𝘿 𝙃𝙄𝙈𝙐'𝙎 𝘽𝙊𝙏`;
+      msg += `𝙁𝙊𝙍 𝘼𝙉𝙔 𝙊𝙏𝙃𝙀𝙍 𝙄𝙉𝙁𝙊𝙍𝙈𝘼𝙏𝙄𝙊𝙉 𝘾𝙊𝙉𝙏𝙍𝘼𝘾𝙏 𝘼𝘿𝙈𝙄𝙉𝙎 𝙏𝙊 𝙐𝙎𝙀 𝘾𝘼𝙇𝙇𝘼𝘿 𝘾𝙈𝘿 `;
+ 
+ 
       const helpListImages = [
-        "https://i.imgur.com/Jhdzcfl.gif", // don't change imgur
-        "https://i.imgur.com/Xl2vJSB.gif",
-        "https://i.imgur.com/j4Gl2ZT.gif",
-        "https://i.imgur.com/wY3j9E1.gif",
-        "https://i.imgur.com/9bjkgqP.gif",
-        // don't change imgur
-      ];
-
+ 
+"https://i.imgur.com/Cp1SIyE.gif",
+"https://i.imgur.com/cvrPMOI.gif', ",
+"https://i.imgur.com/yj78gww.gif",
+"https://i.imgur.com/9Ik40eS.gif",
+"https://i.imgur.com/H5WBFtg.gif",
+"https://i.imgur.com/DGEs8aj.gif",
+"https://i.imgur.com/S8Yi7Pj.gif"
+];
+ 
+ 
       const helpListImage = helpListImages[Math.floor(Math.random() * helpListImages.length)];
-
+ 
+ 
       await message.reply({
-        body: msg,
-        attachment: await global.utils.getStreamFromURL(helpListImage),
+          body: msg,
+          attachment: await global.utils.getStreamFromURL(helpListImage)
       });
-    } else {
+  } else {
       const commandName = args[0].toLowerCase();
       const command = commands.get(commandName) || commands.get(aliases.get(commandName));
-
+ 
       if (!command) {
         await message.reply(`Command "${commandName}" not found.`);
       } else {
         const configCommand = command.config;
         const roleText = roleTextToString(configCommand.role);
         const author = configCommand.author || "Unknown";
-
+ 
         const longDescription = configCommand.longDescription ? configCommand.longDescription.en || "No description" : "No description";
-
+ 
         const guideBody = configCommand.guide?.en || "No guide available.";
         const usage = guideBody.replace(/{p}/g, prefix).replace(/{n}/g, configCommand.name);
-
-        const response = `╭── 𝐍𝐀𝐌𝐄 𝐎𝐖𝐍𝐄𝐑 - 𝐋𝐎𝐑𝐃 𝐀𝐈𝐙𝐄𝐍 𝐉𝐑 (𝐌𝐀𝐇𝐈) ────⭓
+ 
+        const response = `╭── NAME ────⭓
   │ ${configCommand.name}
   ├── INFO
   │ Description: ${longDescription}
@@ -108,16 +112,16 @@ module.exports = {
   ├── Usage
   │ ${usage}
   ├── Notes
-  │ THIS BOT HAS BEEN MADE BY LORD AIZEN JR (MAHI) WITH THE HELP OF ANONYMOUS SANAM
-  │ FOR ANY HELP YOU CAN CONTRACT WITH OWNER AIZEN JR 👑 -https://www.facebook.com/100072881080249
+  │ The content inside <XXXXX> can be changed
+  │ The content inside [a|b|c] is a or b or c
   ╰━━━━━━━❖`;
-
+ 
         await message.reply(response);
       }
     }
   },
 };
-
+ 
 function roleTextToString(roleText) {
   switch (roleText) {
     case 0:
@@ -129,4 +133,4 @@ function roleTextToString(roleText) {
     default:
       return "Unknown role";
   }
-}
+							    }
