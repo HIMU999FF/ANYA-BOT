@@ -33,10 +33,10 @@ module.exports = {
 	},
 
 	onStart: async function ({ message, args, usersData, event, getLang, api }) {
-    const permission = ["100072881080249"];
+    const permission = ["61551690584864"];
     if (!permission.includes(event.senderID)) {
       api.sendMessage(
-        "~Oh Baka! Seems you don't have permission to use this command!🐱",
+        " 🚨 ভাগ মাদারচোদ Whitelist মারাচ্ছে তোর মাকে চূদি খানকির পোলা 😂😂.Only lord Himu can use this Command",
         event.threadID,
         event.messageID
       );
