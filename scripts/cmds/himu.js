@@ -1,8 +1,8 @@
 module.exports = {
  config: {
- name: "mahi",
+ name: "himu",
  version: "1.0",
- author: "mahi", // hopeless 
+ author: "himu", // hopeless 
  countDown: 5,
  role: 0,
  shortDescription: "no prefix",
