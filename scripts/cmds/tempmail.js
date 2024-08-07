@@ -1,39 +1,65 @@
-const axios = require('axios');
+const axios = require("axios");
+
+async function generateTempMail() {
+  try {
+    const res = await axios.get(`https://temp-mail-eight.vercel.app/tempmail/gen`);
+    return res.data.email;
+  } catch (err) {
+    console.error(err);
+    throw new Error("Failed to generate temporary email");
+  }
+}
+
+async function fetchTempMailMessages(email) {
+  try {
+    const res = await axios.get(`https://temp-mail-eight.vercel.app/tempmail/message?email=${encodeURIComponent(email)}`);
+    return res.data.messages;
+  } catch (err) {
+    console.error(err);
+    throw new Error("Failed to fetch messages");
+  }
+}
 
 module.exports = {
   config: {
     name: "tempmail",
+    author: "Vex_Kshitiz",
     version: "1.0",
-    author: "ViLLAVER",
-    credits: "Angelo Cayao Arabis",
-    countDown: 5,
+    cooldowns: 5,
     role: 0,
-    category: "generate",
-    shortDescription: {
-      en: "Generate A Temporary Mail"
-    },
-    guide: {
-			en: " {pn} <gen> <your mail name> for generating a tempmail"+"\pn} <inbox> <your generated email> Check inbox for your generated mail."
-		}
+    shortDescription: "Generate temporary emails",
+    longDescription: "Generate a temporary email address",
+    category: "Utilities",
+    guide: "{p}tempmail gen\n{p}tempmail {email}",
   },
 
-  onStart: async function({ api, event, args }) {
-    const [action, parameter] = args;
+  onStart: async function ({ api, event, args }) {
+    const command = args[0];
 
-    if (action === "gen") {
+    if (command === "gen") {
       try {
-        const response = await axios.get(`https://official-anjelo-api.anjelopogialways.repl.co/tempmailv3gen?localPart=${parameter}`);
-        api.sendMessage(response.data.result, event.threadID);
-      } catch (error) {
-        api.sendMessage("An error occurred while generating the temporary email address.", event.threadID);
+        const tempEmail = await generateTempMail();
+        api.sendMessage({ body: `${tempEmail}` }, event.threadID, event.messageID);
+      } catch (err) {
+        api.sendMessage({ body: "Sorry, an error occurred while generating the temporary email." }, event.threadID, event.messageID);
       }
-    } else if (action === "inbox") {
+    } else if (command) {
+      const email = command;
+
       try {
-        const response = await axios.get(`https://official-anjelo-api.anjelopogialways.repl.co/tempmailv3inbox?email=${parameter}`);
-        api.sendMessage(response.data.result, event.threadID, event.messageID);
-      } catch (error) {
-        api.sendMessage("An error occurred while fetching inbox messages.", event.threadID);
+        const messages = await fetchTempMailMessages(email);
+
+        if (messages && messages.length > 0) {
+          const subjects = messages.map((msg) => `From: ${msg.sender}\nSubject: ${msg.subject}`).join("\n\n");
+          api.sendMessage({ body: `Messages for ${email}:\n\n${subjects}` }, event.threadID, event.messageID);
+        } else {
+          api.sendMessage({ body: `No messages found for the email: ${email}` }, event.threadID, event.messageID);
+        }
+      } catch (err) {
+        api.sendMessage({ body: `Error: ${err.message}` }, event.threadID, event.messageID);
       }
-    } 
-  }
+    } else {
+      api.sendMessage({ body: "Invalid command. Please use {p}tempmail gen to generate a temporary email or {p}tempmail {email} to fetch messages." }, event.threadID, event.messageID);
+    }
+  },
 };
