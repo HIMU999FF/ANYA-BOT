@@ -70,7 +70,7 @@ module.exports = {
         `• 𝘾𝙋𝙐 𝙈𝙊𝘿𝙀𝙇: ${cpuModel}\n` +
         `• 𝙉𝙊𝘿𝙀.𝙅𝙎 𝙑𝙀𝙍𝙎𝙄𝙊𝙉: ${nodeVersion}\n` +
         `• 𝙋𝙇𝘼𝙏𝙁𝙍𝙊𝙈: ${platform}\n` +
-        `• 𝙋𝙄𝙉𝙂: ${botPing}ms\n• API: ${apiPing}ms\n• Total Users: ${users.length}\n• Total Groups: ${groups.length}\n\n` +
+        `• 𝙋𝙄𝙉𝙂: ${botPing}ms\n• 𝘼𝙋𝙄: ${apiPing}ms\n• 𝙏𝙊𝙏𝘼𝙇 𝙐𝙎𝙀𝙍𝙎: ${users.length}\n• 𝙏𝙊𝙏𝘼𝙇 𝙂𝙍𝙊𝙐𝙋𝙎: ${groups.length}\n\n` +
         `🌐 ${bold("Network Interfaces")}:\n\n` +
         `${networkInfo.map(info => `• ${info.interface}: ${info.addresses.join(', ')}`).join('\n')}`;
 
