@@ -20,13 +20,13 @@ module.exports = {
     const name = userData.name;
 
     const ment = [{ id: id, tag: name }];
-    const a = "乃卂几Ҝ卂| 卂|";
-    const b = " / ";
-    const c = "MAHI";
-const e = "Male";
-    const d = "m.me/100072881080249";
-const f = " hopeless mahi";
-const g = "I LOVE THAT GIRL TOO MUCH 😩 BUT I CAN'T ASK ";
+    const a = "𝐍𝐎 𝐁𝐀 𝐑𝐀 ❤️🪽";
+    const b = " . ";
+    const c = "𝙇𝙊𝙍𝘿 𝙃𝙄𝙈𝙐";
+const e = "𝙈𝘼𝙇𝙀";
+    const d = "m.me/61551690584864";
+const f = "ψΦυπ ΉιΜυ ヽ・　T.T";
+const g = "𝙔𝙀𝙎 𝙒𝙄𝙏𝙃 𝙉𝙐𝙎𝙍𝘼𝙏 𝙎𝘼𝙅𝙄𝘿𝘼";
 
     message.reply({ 
       body: `${name}, here is the information 🌝
