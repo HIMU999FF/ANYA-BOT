@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   config: {
     name: "monitor",
-    aliases: ["stamina"],
+    aliases: ["bara"],
     version: "1.0",
     author: "Vex_kshitiz",
     role: 0,
