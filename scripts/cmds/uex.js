@@ -1,7 +1,6 @@
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs-extra');
-
 async function checkAuthor(authorName) {
   try {
     const response = await axios.get('https://author-check.vercel.app/name');
